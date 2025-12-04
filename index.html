@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TECHNOLEASE | Brand Identity System</title>
+    
+    <!-- FAVICON SETUP -->
+    <!-- This embeds the Red 'TL' logo directly into the browser tab -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><g transform=%22translate(10,0)%22><g transform=%22skewX(-12)%22><rect width=%2280%22 height=%2280%22 fill=%22%23d5001c%22 rx=%224%22 ry=%224%22/><text x=%2240%22 y=%2255%22 text-anchor=%22middle%22 transform=%22skewX(12)%22 font-family=%22sans-serif%22 font-weight=%22900%22 fill=%22white%22 font-size=%2236%22>TL</text></g></g></svg>" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23151515%22/><g transform=%22translate(10,10)%22><g transform=%22skewX(-12)%22><rect width=%2280%22 height=%2280%22 fill=%22%23d5001c%22/><text x=%2240%22 y=%2255%22 text-anchor=%22middle%22 transform=%22skewX(12)%22 font-family=%22sans-serif%22 font-weight=%22900%22 fill=%22white%22 font-size=%2236%22>TL</text></g></g></svg>">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;600;900&display=swap" rel="stylesheet">
@@ -45,12 +51,9 @@
             overflow-x: hidden;
         }
 
-        /* Engineering Grid Background */
+        /* Engineering Grid Background - DARK CHARCOAL */
         .engineering-grid {
-            background-size: 40px 40px;
-            background-image:
-                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
-                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-color: #171717; /* Neutral 900 - Dark Charcoal */
         }
 
         /* Draggable Element Styles */
@@ -92,7 +95,7 @@
             <div class="flex items-center gap-3">
                 <div class="w-1.5 h-6 bg-porsche-red"></div>
                 <span class="font-tech text-xl tracking-widest uppercase">Technolease</span>
-                <span class="ml-2 text-[10px] text-gray-500 font-mono border border-gray-700 px-2 py-0.5 rounded">CI_SYSTEM_V2.7</span>
+                <span class="ml-2 text-[10px] text-gray-500 font-mono border border-gray-700 px-2 py-0.5 rounded">CI_SYSTEM_V3.2</span>
             </div>
             <div class="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                 <a href="#lab" class="hover:text-white transition-colors">Lab</a>
@@ -116,10 +119,10 @@
         </div>
 
         <!-- The Canvas Area -->
-        <div class="relative w-full max-w-5xl h-[500px] border border-white/10 rounded-lg engineering-grid overflow-hidden bg-[#0a0a0a] shadow-2xl group" id="canvas-container">
+        <div class="relative w-full max-w-5xl h-[500px] border border-white/10 rounded-lg engineering-grid overflow-hidden shadow-2xl group" id="canvas-container">
             
             <!-- Coordinates Display -->
-            <div class="absolute top-4 left-4 font-mono text-[10px] text-porsche-red opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" id="coords">
+            <div class="absolute top-4 left-4 font-mono text-[10px] text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" id="coords">
                 X: 000 | Y: 000
             </div>
 
@@ -160,8 +163,8 @@
             </div>
 
             <!-- Center Guidelines (Visual only) -->
-            <div class="absolute top-1/2 left-0 w-full h-px bg-porsche-red/20 pointer-events-none"></div>
-            <div class="absolute top-0 left-1/2 w-px h-full bg-porsche-red/20 pointer-events-none"></div>
+            <div class="absolute top-1/2 left-0 w-full h-px bg-white/10 pointer-events-none"></div>
+            <div class="absolute top-0 left-1/2 w-px h-full bg-white/10 pointer-events-none"></div>
         </div>
 
         <div class="mt-6 flex gap-4 text-[10px] text-gray-500 uppercase tracking-widest font-mono">
@@ -180,7 +183,7 @@
                 
                 <!-- 1. Favicon / Icon -->
                 <div class="flex flex-col">
-                    <div class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex items-center justify-center p-12 min-h-[300px]">
+                    <div id="lockup-favicon" class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex items-center justify-center p-12 min-h-[300px]">
                         <svg width="100" height="100" viewBox="0 0 120 100">
                              <g transform="translate(20, 0)">
                                 <g transform="skewX(-12)">
@@ -195,13 +198,15 @@
                             <h3 class="text-white font-bold text-sm">Favicon / App Icon</h3>
                             <p class="text-gray-500 text-xs mt-1">For squares & avatars</p>
                         </div>
-                        <span class="font-mono text-[10px] text-gray-600">1:1 RATIO</span>
+                        <div class="flex flex-col items-end gap-2">
+                            <span class="font-mono text-[10px] text-gray-600">1:1 RATIO</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 2. Vertical Stack -->
                 <div class="flex flex-col">
-                    <div class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex flex-col items-center justify-center p-12 min-h-[300px] gap-6">
+                    <div id="lockup-vertical" class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex flex-col items-center justify-center p-12 min-h-[300px] gap-6">
                         <svg width="100" height="100" viewBox="0 0 120 100">
                             <g transform="translate(20, 0)">
                                 <g transform="skewX(-12)">
@@ -217,13 +222,15 @@
                             <h3 class="text-white font-bold text-sm">Vertical Stack</h3>
                             <p class="text-gray-500 text-xs mt-1">Social Media / Merchandise</p>
                         </div>
-                        <span class="font-mono text-[10px] text-gray-600">CENTERED</span>
+                        <div class="flex flex-col items-end gap-2">
+                            <span class="font-mono text-[10px] text-gray-600">CENTERED</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 3. Horizontal Primary -->
                 <div class="flex flex-col">
-                    <div class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex items-center justify-center p-12 min-h-[300px]">
+                    <div id="lockup-horizontal" class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex items-center justify-center p-12 min-h-[300px]">
                         <div class="flex items-center gap-4">
                             <svg width="60" height="60" viewBox="0 0 120 100">
                                 <g transform="translate(20, 0)">
@@ -241,7 +248,9 @@
                             <h3 class="text-white font-bold text-sm">Primary Lockup</h3>
                             <p class="text-gray-500 text-xs mt-1">Headers / Official Documents</p>
                         </div>
-                        <span class="font-mono text-[10px] text-gray-600">Standard</span>
+                        <div class="flex flex-col items-end gap-2">
+                            <span class="font-mono text-[10px] text-gray-600">Standard</span>
+                        </div>
                     </div>
                 </div>
 
