@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECHNOLEASE | Brand Identity System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500;600;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        porsche: {
+                            red: '#d5001c',
+                            black: '#0f0f0f',
+                            dark: '#1a1a1a',
+                            silver: '#e0e0e0',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        tech: ['Michroma', 'sans-serif'],
+                    },
+                    cursor: {
+                        'grab': 'grab',
+                        'grabbing': 'grabbing',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --grid-color: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* Engineering Grid Background */
+        .engineering-grid {
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+        }
+
+        /* Draggable Element Styles */
+        .draggable {
+            cursor: grab;
+            position: absolute;
+            user-select: none;
+            touch-action: none;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+            z-index: 10;
+        }
+        
+        .draggable:active {
+            cursor: grabbing;
+            filter: drop-shadow(0 10px 15px rgba(213, 0, 28, 0.3));
+            transform: scale(1.02);
+            z-index: 50;
+        }
+
+        /* Glass Panel */
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Typography Preview Helper */
+        .editable-text:focus {
+            outline: 1px solid #d5001c;
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-porsche-red selection:text-white">
+
+    <!-- Header -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/10 bg-black/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-1.5 h-6 bg-porsche-red"></div>
+                <span class="font-tech text-xl tracking-widest uppercase">Technolease</span>
+                <span class="ml-2 text-[10px] text-gray-500 font-mono border border-gray-700 px-2 py-0.5 rounded">CI_SYSTEM_V2.7</span>
+            </div>
+            <div class="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                <a href="#lab" class="hover:text-white transition-colors">Lab</a>
+                <a href="#variations" class="hover:text-white transition-colors">Lockups</a>
+                <a href="#colors" class="hover:text-white transition-colors">Palette</a>
+                <a href="#typography" class="hover:text-white transition-colors">Type</a>
+                <a href="#components" class="hover:text-white transition-colors">UI</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section 1: Interactive Construction Lab -->
+    <section id="lab" class="relative pt-32 pb-10 min-h-[80vh] flex flex-col items-center justify-center">
+        
+        <div class="text-center mb-8 relative z-10 pointer-events-none">
+            <div class="text-porsche-red text-xs font-bold tracking-[0.3em] uppercase mb-2 animate-pulse">Interactive Mode</div>
+            <h1 class="text-4xl md:text-5xl font-tech text-white mb-4">Construction Lab</h1>
+            <p class="text-gray-500 text-sm max-w-lg mx-auto">
+                Deconstruct the brand mark. Click and drag elements to explore the modularity and precision of the identity system.
+            </p>
+        </div>
+
+        <!-- The Canvas Area -->
+        <div class="relative w-full max-w-5xl h-[500px] border border-white/10 rounded-lg engineering-grid overflow-hidden bg-[#0a0a0a] shadow-2xl group" id="canvas-container">
+            
+            <!-- Coordinates Display -->
+            <div class="absolute top-4 left-4 font-mono text-[10px] text-porsche-red opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" id="coords">
+                X: 000 | Y: 000
+            </div>
+
+            <!-- Controls (Reset) -->
+            <div class="absolute top-4 right-4 z-50 flex gap-2">
+                <button onclick="resetLogo()" class="bg-white/5 hover:bg-white/10 border border-white/20 text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded flex items-center gap-2 cursor-pointer">
+                    <i data-lucide="refresh-ccw" class="w-3 h-3"></i> Reset
+                </button>
+            </div>
+
+            <!-- Draggable: Icon Block -->
+            <div id="drag-icon" class="draggable" style="top: 180px; left: 250px;">
+                <!-- viewBox increased to 120 and translated to ensure parallelogram fits -->
+                <!-- x=28 is the mathematically corrected center for the skewed coordinate system -->
+                <svg width="100" height="100" viewBox="0 0 120 100" class="pointer-events-none">
+                    <g transform="translate(20, 0)">
+                        <g transform="skewX(-12)">
+                            <rect width="80" height="80" fill="#d5001c" />
+                            <text x="28" y="55" text-anchor="middle" transform="skewX(12)" font-family="Inter" font-weight="900" fill="white" font-size="36">TL</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Draggable: Text Mark -->
+            <div id="drag-text" class="draggable" style="top: 205px; left: 350px;">
+                <svg width="400" height="50" class="pointer-events-none">
+                    <text x="0" y="35" font-family="Michroma" font-size="36" fill="white" letter-spacing="-1">TECHNOLEASE</text>
+                </svg>
+            </div>
+
+            <!-- Draggable: Decorative Tag -->
+            <div id="drag-tag" class="draggable" style="top: 260px; left: 350px;">
+                <div class="flex items-center gap-2 opacity-50 pointer-events-none">
+                    <div class="w-16 h-px bg-white"></div>
+                    <span class="font-mono text-[10px] text-white tracking-widest">EST. 2025</span>
+                </div>
+            </div>
+
+            <!-- Center Guidelines (Visual only) -->
+            <div class="absolute top-1/2 left-0 w-full h-px bg-porsche-red/20 pointer-events-none"></div>
+            <div class="absolute top-0 left-1/2 w-px h-full bg-porsche-red/20 pointer-events-none"></div>
+        </div>
+
+        <div class="mt-6 flex gap-4 text-[10px] text-gray-500 uppercase tracking-widest font-mono">
+            <span>Mouse: Drag & Drop</span>
+            <span class="text-gray-700">|</span>
+            <span>Constraint: Freeform</span>
+        </div>
+    </section>
+
+    <!-- Brand Variations Section -->
+    <section id="variations" class="bg-[#0a0a0a] border-y border-white/10 py-24 mb-32">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-2xl font-tech text-white mb-12 border-l-4 border-porsche-red pl-4">Standard Lockups</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                
+                <!-- 1. Favicon / Icon -->
+                <div class="flex flex-col">
+                    <div class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex items-center justify-center p-12 min-h-[300px]">
+                        <svg width="100" height="100" viewBox="0 0 120 100">
+                             <g transform="translate(20, 0)">
+                                <g transform="skewX(-12)">
+                                    <rect width="80" height="80" fill="#d5001c" />
+                                    <text x="28" y="55" text-anchor="middle" transform="skewX(12)" font-family="Inter" font-weight="900" fill="white" font-size="36">TL</text>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="mt-4 flex justify-between items-end">
+                        <div>
+                            <h3 class="text-white font-bold text-sm">Favicon / App Icon</h3>
+                            <p class="text-gray-500 text-xs mt-1">For squares & avatars</p>
+                        </div>
+                        <span class="font-mono text-[10px] text-gray-600">1:1 RATIO</span>
+                    </div>
+                </div>
+
+                <!-- 2. Vertical Stack -->
+                <div class="flex flex-col">
+                    <div class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex flex-col items-center justify-center p-12 min-h-[300px] gap-6">
+                        <svg width="100" height="100" viewBox="0 0 120 100">
+                            <g transform="translate(20, 0)">
+                                <g transform="skewX(-12)">
+                                    <rect width="80" height="80" fill="#d5001c" />
+                                    <text x="28" y="55" text-anchor="middle" transform="skewX(12)" font-family="Inter" font-weight="900" fill="white" font-size="36">TL</text>
+                                </g>
+                            </g>
+                        </svg>
+                        <span class="font-tech text-xl text-white tracking-tight">TECHNOLEASE</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-end">
+                        <div>
+                            <h3 class="text-white font-bold text-sm">Vertical Stack</h3>
+                            <p class="text-gray-500 text-xs mt-1">Social Media / Merchandise</p>
+                        </div>
+                        <span class="font-mono text-[10px] text-gray-600">CENTERED</span>
+                    </div>
+                </div>
+
+                <!-- 3. Horizontal Primary -->
+                <div class="flex flex-col">
+                    <div class="flex-grow bg-[#151515] border border-white/5 rounded-lg flex items-center justify-center p-12 min-h-[300px]">
+                        <div class="flex items-center gap-4">
+                            <svg width="60" height="60" viewBox="0 0 120 100">
+                                <g transform="translate(20, 0)">
+                                    <g transform="skewX(-12)">
+                                        <rect width="80" height="80" fill="#d5001c" />
+                                        <text x="28" y="55" text-anchor="middle" transform="skewX(12)" font-family="Inter" font-weight="900" fill="white" font-size="36">TL</text>
+                                    </g>
+                                </g>
+                            </svg>
+                            <span class="font-tech text-2xl text-white tracking-tight">TECHNOLEASE</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-end">
+                        <div>
+                            <h3 class="text-white font-bold text-sm">Primary Lockup</h3>
+                            <p class="text-gray-500 text-xs mt-1">Headers / Official Documents</p>
+                        </div>
+                        <span class="font-mono text-[10px] text-gray-600">Standard</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Identity Content -->
+    <div class="max-w-7xl mx-auto px-6 pb-32">
+        
+        <!-- Color Palette -->
+        <section id="colors" class="mb-32">
+            <h2 class="text-2xl font-tech text-white mb-12 border-l-4 border-porsche-red pl-4">Color System</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Red -->
+                <div class="glass-panel p-2 rounded-lg group cursor-pointer hover:-translate-y-2 transition-transform" onclick="copyColor('#d5001c')">
+                    <div class="h-32 bg-[#d5001c] rounded-md mb-4 flex items-center justify-center relative overflow-hidden">
+                         <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                         <i data-lucide="copy" class="text-white opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300"></i>
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-white mb-1">Porsche Red</h3>
+                        <p class="font-mono text-xs text-gray-500">#D5001C</p>
+                        <p class="text-[10px] text-gray-600 mt-2">Primary Accent / Action</p>
+                    </div>
+                </div>
+
+                <!-- Black -->
+                <div class="glass-panel p-2 rounded-lg group cursor-pointer hover:-translate-y-2 transition-transform" onclick="copyColor('#0f0f0f')">
+                    <div class="h-32 bg-[#0f0f0f] border border-white/10 rounded-md mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                         <i data-lucide="copy" class="text-white opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300"></i>
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-white mb-1">Asphalt Black</h3>
+                        <p class="font-mono text-xs text-gray-500">#0F0F0F</p>
+                        <p class="text-[10px] text-gray-600 mt-2">Background / Surface</p>
+                    </div>
+                </div>
+
+                <!-- Silver -->
+                <div class="glass-panel p-2 rounded-lg group cursor-pointer hover:-translate-y-2 transition-transform" onclick="copyColor('#e0e0e0')">
+                    <div class="h-32 bg-[#e0e0e0] rounded-md mb-4 flex items-center justify-center relative overflow-hidden">
+                         <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                         <i data-lucide="copy" class="text-black opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300"></i>
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-white mb-1">Silver Metallic</h3>
+                        <p class="font-mono text-xs text-gray-500">#E0E0E0</p>
+                        <p class="text-[10px] text-gray-600 mt-2">Primary Text / Borders</p>
+                    </div>
+                </div>
+
+                <!-- White -->
+                <div class="glass-panel p-2 rounded-lg group cursor-pointer hover:-translate-y-2 transition-transform" onclick="copyColor('#ffffff')">
+                    <div class="h-32 bg-white rounded-md mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                         <i data-lucide="copy" class="text-black opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300"></i>
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-white mb-1">Optic White</h3>
+                        <p class="font-mono text-xs text-gray-500">#FFFFFF</p>
+                        <p class="text-[10px] text-gray-600 mt-2">Highlights / Dark Mode Text</p>
+                    </div>
+                </div>
+            </div>
+            <div id="toast" class="fixed bottom-8 right-8 bg-porsche-red text-white px-6 py-3 rounded-lg transform translate-y-20 opacity-0 transition-all duration-300 font-bold text-sm shadow-xl z-50 pointer-events-none">
+                Color Code Copied
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section id="typography" class="mb-32">
+            <h2 class="text-2xl font-tech text-white mb-12 border-l-4 border-porsche-red pl-4">Typography</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Display Font -->
+                <div>
+                    <div class="flex justify-between items-baseline mb-6 border-b border-white/10 pb-2">
+                        <span class="text-xs font-mono text-porsche-red">PRIMARY DISPLAY</span>
+                        <span class="text-xs font-mono text-gray-500">MICHROMA</span>
+                    </div>
+                    <div class="space-y-8">
+                        <div>
+                            <p class="font-tech text-6xl text-white mb-4">Aa</p>
+                            <p class="font-tech text-2xl text-white leading-tight">
+                                ENGINEERED FOR<br>VELOCITY.
+                            </p>
+                        </div>
+                        <p class="text-sm text-gray-500 leading-relaxed max-w-sm">
+                            Michroma is used for all headers, hero statements, and the brand mark. It conveys technical precision and a futuristic automotive feel.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Body Font -->
+                <div>
+                     <div class="flex justify-between items-baseline mb-6 border-b border-white/10 pb-2">
+                        <span class="text-xs font-mono text-porsche-red">SECONDARY / UI</span>
+                        <span class="text-xs font-mono text-gray-500">INTER</span>
+                    </div>
+                    <div class="space-y-8">
+                        <div>
+                            <p class="font-sans font-bold text-6xl text-white mb-4">Aa</p>
+                            <p class="font-sans font-normal text-base text-gray-300 leading-relaxed editable-text" contenteditable="true">
+                                This text is editable. Click here to test the Inter typeface rendering. Inter is used for body copy, UI elements, metadata, and technical specifications to ensure maximum legibility at small sizes.
+                            </p>
+                        </div>
+                        <div class="flex gap-4 font-sans text-white">
+                            <span class="font-light">Light</span>
+                            <span class="font-normal">Regular</span>
+                            <span class="font-medium">Medium</span>
+                            <span class="font-bold">Bold</span>
+                            <span class="font-black">Black</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UI Components -->
+        <section id="components">
+            <h2 class="text-2xl font-tech text-white mb-12 border-l-4 border-porsche-red pl-4">UI Components</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                
+                <!-- Buttons & Controls -->
+                <div class="space-y-8">
+                    <h3 class="text-xs font-mono text-gray-500 uppercase">Interaction Elements</h3>
+                    
+                    <div class="flex flex-wrap gap-4 items-center">
+                        <button class="bg-porsche-red text-white px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-red-700 transition-colors shadow-[0_0_15px_rgba(213,0,28,0.4)]">
+                            Primary Action
+                        </button>
+                        
+                        <button class="border border-white/30 text-white px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
+                            Secondary
+                        </button>
+                        
+                        <button class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white flex items-center gap-2">
+                            Text Link <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded max-w-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                            <span class="text-xs font-mono text-gray-400">SYSTEM_STATUS</span>
+                        </div>
+                        <div class="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full w-2/3 bg-porsche-red"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cards -->
+                 <div class="space-y-8">
+                    <h3 class="text-xs font-mono text-gray-500 uppercase">Card Architecture</h3>
+                    
+                    <div class="bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-white/10 p-6 rounded group hover:border-porsche-red/50 transition-colors relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                            <i data-lucide="cpu" class="text-white"></i>
+                        </div>
+                        <div class="text-porsche-red text-[10px] font-bold tracking-widest mb-2">SAMPLE CARD</div>
+                        <h4 class="text-xl font-tech text-white mb-2">H100 Node</h4>
+                        <p class="text-gray-500 text-sm mb-6">Hover over this card to see the active state border transition.</p>
+                        <div class="flex items-center justify-between border-t border-white/10 pt-4">
+                            <span class="font-mono text-white text-xs">$4,200/mo</span>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 text-white transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                        </div>
+                    </div>
+                 </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-12 bg-black">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center text-[10px] text-gray-600 font-mono">
+            <div>TECHNOLEASE BRAND SYSTEM</div>
+            <div>INTERNAL USE ONLY</div>
+        </div>
+    </footer>
+
+    <script>
+        // Ensure Lucide is defined before using it
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                console.error("Lucide library failed to load or is not defined.");
+            }
+        });
+
+        // ---------------------------------------------------------
+        // FIXED DRAG AND DROP LOGIC (Offset Method)
+        // ---------------------------------------------------------
+        const container = document.getElementById('canvas-container');
+        const draggables = document.querySelectorAll('.draggable');
+        const coords = document.getElementById('coords');
+        
+        let activeItem = null;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        draggables.forEach(el => {
+            el.addEventListener('mousedown', dragStart);
+            el.addEventListener('touchstart', dragStart, {passive: false});
+        });
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, {passive: false});
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+
+        function dragStart(e) {
+            // Only Left Click or Touch
+            if (e.type === 'mousedown' && e.button !== 0) return;
+
+            activeItem = e.currentTarget;
+            
+            // Calculate cursor offset relative to the element's top-left
+            // This prevents the element from snapping to the mouse position
+            const rect = activeItem.getBoundingClientRect();
+            
+            if (e.type === 'touchstart') {
+                dragOffsetX = e.touches[0].clientX - rect.left;
+                dragOffsetY = e.touches[0].clientY - rect.top;
+            } else {
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+            }
+            
+            activeItem.style.cursor = 'grabbing';
+            activeItem.style.zIndex = 100; // Bring to front
+        }
+
+        function drag(e) {
+            if (!activeItem) return;
+            e.preventDefault();
+
+            let clientX, clientY;
+            if (e.type === 'touchmove') {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            // Important: We need the Container's rect to calculate relative position
+            const containerRect = container.getBoundingClientRect();
+
+            // New X/Y relative to the container, minus the internal offset of the click
+            let newLeft = clientX - containerRect.left - dragOffsetX;
+            let newTop = clientY - containerRect.top - dragOffsetY;
+
+            activeItem.style.left = `${newLeft}px`;
+            activeItem.style.top = `${newTop}px`;
+
+            coords.innerText = `X: ${Math.round(newLeft)} | Y: ${Math.round(newTop)}`;
+        }
+
+        function dragEnd() {
+            if (activeItem) {
+                activeItem.style.cursor = 'grab';
+                activeItem.style.zIndex = 10;
+                activeItem = null;
+            }
+        }
+
+        // ---------------------------------------------------------
+        // RESET LOGIC
+        // ---------------------------------------------------------
+        function resetLogo() {
+            // Icon Position
+            const icon = document.getElementById('drag-icon');
+            icon.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            icon.style.top = '180px';
+            icon.style.left = '250px';
+
+            // Text Position
+            const text = document.getElementById('drag-text');
+            text.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            text.style.top = '205px';
+            text.style.left = '350px';
+            
+            // Tag Position
+            const tag = document.getElementById('drag-tag');
+            tag.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            tag.style.top = '260px';
+            tag.style.left = '350px';
+
+            setTimeout(() => {
+                icon.style.transition = '';
+                text.style.transition = '';
+                tag.style.transition = '';
+            }, 500);
+        }
+
+        // ---------------------------------------------------------
+        // ROBUST COLOR COPY LOGIC (ExecCommand Fallback)
+        // ---------------------------------------------------------
+        function copyColor(text) {
+            // Fallback method for iframes where navigator.clipboard might fail
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if(successful) {
+                    showToast();
+                } else {
+                    console.error('Fallback: Copying text command was unsuccessful');
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
